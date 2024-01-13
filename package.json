@@ -1,0 +1,19 @@
+{
+  "name": "XML.js",
+  "version": "1.0.0",
+  "description": "XMLjs is a tiny (1.1kB min/ 615B gzipped) beautiful XML markup generator.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ayn",
+  "repository": "github:onajourney/XML.js",
+  "license": "MIT",
+  "keywords": [
+    "xml",
+    "generator",
+    "javascript",
+    "markup",
+    "small"
+  ]
+}
