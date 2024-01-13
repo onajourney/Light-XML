@@ -1,6 +1,4 @@
 # XMLjs
-![Build Status](https://badgen.net/bundlephobia/min/@ayn/xmljs) ![Build Status](https://badgen.net/bundlephobia/minzip/@ayn/xmljs)
-
 XMLjs is a tiny beautiful XML markup generator.
 
 ## API
