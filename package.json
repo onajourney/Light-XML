@@ -1,5 +1,5 @@
 {
-  "name": "light-xml5",
+  "name": "light-xml6",
   "version": "1.0.0",
   "description": "Light-XML is a tiny (1.1kB min/ 615B gzipped) XML markup generator.",
   "main": "index.js",
