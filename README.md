@@ -1,20 +1,20 @@
-# XML.js
-XML.js is a tiny beautiful XML markup generator.
+# Light XML
+Light XML is a tiny XML markup generator.
 
 ## API
 ```js
-const XML = require('@ayn/xmljs')
+const XML = require('light-xml')
 
-let doc = new XMLjs()
+let doc = new XML()
     .fruits(el=>{
         el.mango({ color: 'green'}, 'This mango is not ripe')
         el.bananas(el=>{
             el.babybanana('Quite small')
             el.plantain('Delicious')
         })
-    })
+    });
     
-console.log(doc.getMarkup())
+console.log(doc.getMarkup());
 ```
 Simple and elegant. Constructor takes a string as its argument that allows you to set the documents prolog.
 

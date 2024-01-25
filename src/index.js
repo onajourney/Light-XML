@@ -1,32 +1,30 @@
-class XMLjs {
+class lightXML {
     constructor(prolog = '') {
-
         // Docs info tag
-        this.config = { prolog }
+        this.config = { prolog };
 
         // Document structure
-        this.dom={}
+        this.dom={};
         
         // Allow wild card functions
-        return new Proxy(this, this)
+        return new Proxy(this, this);
     }
 
     get(target, prop) {
         // If doesn't exist
         if(!this[prop]) {
-
             // Run our function
             return function(...Args) {
-
                 // defaults
                 let attributes = {},
                     content = '',
                     cb = ()=>{},
-                    target = (Args[3]) ? Args[3] : this.dom
+                    target = (Args[3]) ? Args[3] : this.dom;
                  
                 // Adjust first 3 args by type
                 for(let [i, arg] of Args.entries()) { 
-                    if(i == 3 ) break                   
+                    if(i == 3 ) break;
+
                     switch(typeof arg) {
                         case 'object':
                           attributes = arg
@@ -47,11 +45,11 @@ class XMLjs {
                         content,
                         children: [],
                     }
-                }
+                };
 
                 // Append to parent
-                if(target.push) target.push(obj)
-                    else target[prop] = obj[prop]
+                if(target.push) target.push(obj);
+                    else target[prop] = obj[prop];
         
                 // Modify cb to append to right object
                 cb(new Proxy({}, {
@@ -68,25 +66,22 @@ class XMLjs {
                     }
                 }))
     
-                return this
-    
+                return this;
             }
         }
     
         else {
-            return this[prop]
+            return this[prop];
         }
     }
 
     getMarkup(obj) {
-        
         if(!obj) { 
-            obj = this.dom
-            var markup = this.config.prolog
-        } else var markup = ''
+            obj = this.dom;
+            var markup = this.config.prolog;
+        } else var markup = '';
 
         let parse = (obj, content ='') => {
-
             let markup = ''
 
             for(let el in obj) {
@@ -115,14 +110,12 @@ class XMLjs {
 
                 return markup
             }
+        };
 
-        }
-
-        markup += parse(obj || this.dom)
+        markup += parse(obj || this.dom);
       
-        return markup
-        
+        return markup;
     }
 }
 
-module.exports = XMLjs
+module.exports = lightXML;
