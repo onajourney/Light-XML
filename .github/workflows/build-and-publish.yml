@@ -1,0 +1,41 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 'node'] # 'node' is the latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+
+  publish:
+    needs: build
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Run only on push to main
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'node'
+    - run: npm ci
+    - name: Semantic Release
+      run: npx semantic-release --branches main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # semantic-release uses this to create releases on GitHub
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # semantic-release uses this to publish your package to npm

@@ -12,7 +12,6 @@ class XMLjs {
     }
 
     get(target, prop) {
-
         // If doesn't exist
         if(!this[prop]) {
 

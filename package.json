@@ -4,6 +4,7 @@
   "description": "XMLjs is a tiny (1.1kB min/ 615B gzipped) beautiful XML markup generator.",
   "main": "index.js",
   "scripts": {
+    "release": "semantic-release",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ayn",
@@ -15,5 +16,8 @@
     "javascript",
     "markup",
     "small"
-  ]
+  ],
+  "devDependencies": {
+    "semantic-release": "^23.0.0"
+  }
 }

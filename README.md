@@ -1,5 +1,5 @@
-# XMLjs
-XMLjs is a tiny beautiful XML markup generator.
+# XML.js
+XML.js is a tiny beautiful XML markup generator.
 
 ## API
 ```js
