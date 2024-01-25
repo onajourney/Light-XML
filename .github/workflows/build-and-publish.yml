@@ -9,43 +9,69 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 'node'] # 'node' is the latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 20
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 20.x
     - name: Bundle and Minimize with esbuild
       run: npx esbuild src/index.js --bundle --minify --outfile=dist/index.js
+    - name: Copy package.json to dist (for publishing)
+      run: cp package.json dist/
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
-        name: production-artifacts
+        name: publishing-artifacts
         path: dist
 
-  publish:
+  publish-to-github:
     needs: build
     permissions:
       contents: write
+      packages: write
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Run only on push to main
+    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 'node'
+        node-version: 20.x
+        registry-url: 'https://npm.pkg.github.com/'
     - name: Download built artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
-        name: production-artifacts
+        name: publishing-artifacts
         path: dist
+    - name: Update Package Name To Follow Scope Naming
+      run: cd dist && npm pkg set name="@$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/$(npm pkg get name | jq -r .)"
     - name: Semantic Release
-      run: npx semantic-release --branches main
+      run: cd dist && npx semantic-release --branches main
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # semantic-release uses this to create releases on GitHub
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # semantic-release uses this to publish your package to npm
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # publish-to-npm:
+  #   needs: build
+  #   permissions:
+  #     contents: write
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Setup Node.js
+  #     uses: actions/setup-node@v4
+  #     with:
+  #       node-version: 20.x
+  #   - name: Download built artifacts
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: publishing-artifacts
+  #       path: dist
+  #   - name: Semantic Release
+  #     run: cd dist && npx semantic-release --branches main
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
